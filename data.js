@@ -131,4 +131,4 @@ export class contactsComponent extends NBaseComponent implements OnInit {
 
 module.exports = {
 	tscode
-}
+};
