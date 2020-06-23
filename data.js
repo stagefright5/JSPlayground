@@ -11,7 +11,8 @@ import { birthdaynotificationsService } from '../../services/birthdaynotificatio
 
 export class contactsComponent extends NBaseComponent implements OnInit {
     mm: ModelMethods;
-    @Input() setPageValue;
+	@Input() setPageValue = 'asdasd';
+	@Output() openMenu: EventEmitter<any> = new EventEmitter();
     @Input() pagination;
     @Output() dataObj;
     @Input() searchContent;
@@ -82,7 +83,7 @@ export class contactsComponent extends NBaseComponent implements OnInit {
         let button1 = {
             firstBtn: 'RISK PURCHASE',
             operation: 'navigate',
-            link: \`/baseLayout/contactData/createprospect/create/${element['contact_id']}/0\`,
+            link: "/baseLayout/contactData/createprospect/create/",
             value: true
         }
         let button2 = {
