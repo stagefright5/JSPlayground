@@ -1,17 +1,18 @@
 
-/*********** {START - Initializations, Definitions} ************/
 const ts = require('typescript');
-
 /**
- * 
  * @param {import('typescript').ScriptTarget} target 
  * @param {boolean} setParentNode 
  */
 module.exports = function TSParser(target, setParentNode) {
 
 	const FRO = { // FunctionResultObject
-		getIOPropertyNames: {}
+		/**
+ 		 * @type {GetIOsResult}
+ 		 */
+		getIOPropertyNames: { inputs: new Set(), outputs: new Set() }
 	}
+
 	/**
 	 * @param {string} code
 	 */
@@ -20,40 +21,38 @@ module.exports = function TSParser(target, setParentNode) {
 	}
 
 	/**
-	 * 
 	 * @param {import('typescript').Node} node 
 	 */
 	function getIOPropertyNames(node) {
 		if (ts.isPropertyDeclaration(node)) {
 			const IOProperties = _getIOPropertyDecorators(node);
 			Object.keys(FRO.getIOPropertyNames).forEach(key => { // key = 'input', 'output'
-				const v = IOProperties[key].map(io => _getIODecoratorNames(io, node));
-				v.length && FRO.getIOPropertyNames[key].push(...v);
+				IOProperties[key].forEach(io => FRO.getIOPropertyNames[key].add(_getIODecoratorNames(io, node)));
 			});
 		}
 		ts.forEachChild(node, getIOPropertyNames);
 	}
 
 	/**
-	 * @typedef {Object} result
-	 * @property {Array<import('typescript').Decorator>} inputs
-	 * @property {Array<import('typescript').Decorator>} outputs
+	 * @typedef {Object} GetIOsResult
+	 * @property {Set<import('typescript').Decorator>} inputs
+	 * @property {Set<import('typescript').Decorator>} outputs
 	 */
 	/**
 	 * @param {import('typescript').Node} node
-	 * @returns {result}
+	 * @returns {GetIOsResult}
 	 */
 	function _getIOPropertyDecorators(node) {
 		/**
-		 * @type {result}
+		 * @type {GetIOsResult}
 		 */
-		const result = { inputs: [], outputs: [] };
+		const result = { inputs: new Set(), outputs: new Set() };
 		node.decorators && node.decorators.forEach(decorator => {
 			const fullText = decorator.getFullText().trim();
 			if (/^@Input\(/.test(fullText)) {
-				result.inputs.push(decorator);
+				result.inputs.add(decorator);
 			} else if (/^@Output\(/.test(fullText)) {
-				result.outputs.push(decorator);
+				result.outputs.add(decorator);
 			}
 		});
 		return result;
@@ -61,7 +60,9 @@ module.exports = function TSParser(target, setParentNode) {
 
 	/**
 	 * @param {import('typescript').Decorator} io 
-	 * @param {import('typescript').Node} node 
+	 * @param {import('typescript').Node} node
+	 * 
+	 * @returns {string}
 	 */
 
 	function _getIODecoratorNames(io, node) {
@@ -83,17 +84,12 @@ module.exports = function TSParser(target, setParentNode) {
 	return {
 		getSource: getSourceFileObject,
 		/**
-		 * 
 		 * @param {import('typescript').Node} ast 
 		 */
 		getIOs: function (ast) {
-			FRO.getIOPropertyNames = { inputs: [], outputs: [] };
+			FRO.getIOPropertyNames = { inputs: new Set(), outputs: new Set() };
 			getIOPropertyNames(ast);
 			return FRO.getIOPropertyNames;
 		}
 	};
 };
-
-/*********** {END - Initializations, Definitions} ************/
-
-
