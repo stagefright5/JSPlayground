@@ -8,7 +8,11 @@
 	"main": "tsparser.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"tsparser": "node tsparser.js"
+		"tsparser": "node tsparser.js",
+		"streams": "node streams.js",
+		"asyncawait": "node asyncawait.js",
+
+		"prettify": "prettier --write **/*.js **/*.json **/*.md "
 	},
 	"repository": {
 		"type": "git",

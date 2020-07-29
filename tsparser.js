@@ -1,17 +1,16 @@
-
 const ts = require('typescript');
 /**
- * @param {import('typescript').ScriptTarget} target 
- * @param {boolean} setParentNode 
+ * @param {import('typescript').ScriptTarget} target
+ * @param {boolean} setParentNode
  */
 module.exports = function TSParser(target, setParentNode) {
-
-	const FRO = { // FunctionResultObject
+	const FRO = {
+		// FunctionResultObject
 		/**
- 		 * @type {GetIOsResult}
- 		 */
+		 * @type {GetIOsResult}
+		 */
 		getIOPropertyNames: { inputs: new Set(), outputs: new Set() }
-	}
+	};
 
 	/**
 	 * @param {string} code
@@ -21,12 +20,13 @@ module.exports = function TSParser(target, setParentNode) {
 	}
 
 	/**
-	 * @param {import('typescript').Node} node 
+	 * @param {import('typescript').Node} node
 	 */
 	function getIOPropertyNames(node) {
 		if (ts.isPropertyDeclaration(node)) {
 			const IOProperties = _getIOPropertyDecorators(node);
-			Object.keys(FRO.getIOPropertyNames).forEach(key => { // key = 'input', 'output'
+			Object.keys(FRO.getIOPropertyNames).forEach(key => {
+				// key = 'input', 'output'
 				IOProperties[key].forEach(io => FRO.getIOPropertyNames[key].add(_getIODecoratorNames(io, node)));
 			});
 		}
@@ -47,21 +47,22 @@ module.exports = function TSParser(target, setParentNode) {
 		 * @type {GetIOsResult}
 		 */
 		const result = { inputs: new Set(), outputs: new Set() };
-		node.decorators && node.decorators.forEach(decorator => {
-			const fullText = decorator.getFullText().trim();
-			if (/^@Input\(/.test(fullText)) {
-				result.inputs.add(decorator);
-			} else if (/^@Output\(/.test(fullText)) {
-				result.outputs.add(decorator);
-			}
-		});
+		node.decorators &&
+			node.decorators.forEach(decorator => {
+				const fullText = decorator.getFullText().trim();
+				if (/^@Input\(/.test(fullText)) {
+					result.inputs.add(decorator);
+				} else if (/^@Output\(/.test(fullText)) {
+					result.outputs.add(decorator);
+				}
+			});
 		return result;
 	}
 
 	/**
-	 * @param {import('typescript').Decorator} io 
+	 * @param {import('typescript').Decorator} io
 	 * @param {import('typescript').Node} node
-	 * 
+	 *
 	 * @returns {string}
 	 */
 
@@ -70,7 +71,7 @@ module.exports = function TSParser(target, setParentNode) {
 	}
 
 	/**
-	 * @param {import('typescript').Decorator} decorator 
+	 * @param {import('typescript').Decorator} decorator
 	 * @returns {string[]}
 	 */
 	function getDecoratorArgs(decorator) {
@@ -78,13 +79,15 @@ module.exports = function TSParser(target, setParentNode) {
 		 * @type {import('typescript').CallExpression}
 		 */
 		const expr = decorator.expression;
-		return (expr && expr.arguments && expr.arguments.pos < expr.arguments.end) ? expr.arguments.map(a => (a.end > a.pos) && (a.getFullText().trim().replace(/\'|\"/g, ''))) : [''];
+		return expr && expr.arguments && expr.arguments.pos < expr.arguments.end
+			? expr.arguments.map(a => a.end > a.pos && a.getFullText().trim().replace(/\'|\"/g, ''))
+			: [''];
 	}
 
 	return {
 		getSource: getSourceFileObject,
 		/**
-		 * @param {import('typescript').Node} ast 
+		 * @param {import('typescript').Node} ast
 		 */
 		getIOs: function (ast) {
 			FRO.getIOPropertyNames = { inputs: new Set(), outputs: new Set() };

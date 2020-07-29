@@ -10,4 +10,3 @@ const ast = TSP.getSource(code);
 const res = TSP.getIOs(ast);
 
 console.log(res);
-
