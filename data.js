@@ -12,9 +12,9 @@ import { birthdaynotificationsService } from '../../services/birthdaynotificatio
 export class contactsComponent extends NBaseComponent implements OnInit {
     mm: ModelMethods;
 	@Input() @SomeDecor('hi', {truable: false})setPageValue = 'asdasd';
-	@Output() openMenu: EventEmitter<any> = new EventEmitter();
+	@Output() openMenu: EventEmitter<any> = new EventEmitter();
 	@Input('pagn') pagination;
-	@Output() openMenuu: EventEmitter<any> = new EventEmitter();
+	@Output() openMenuu: EventEmitter<any> = new EventEmitter();
     @Output('data') dataObj;
     @Input() searchContent;
     @Output() filterContent;
