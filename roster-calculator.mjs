@@ -26,15 +26,17 @@ const formatToddMMyyyy = date => {
 
 // TODO: The script also takes an optional argument to start the roster from a specific date.
 const compute = (people, startIndex = 0) => {
+	console.log('Starting the roster from:', people[startIndex]);
 	startIndex = process.argv[2] ? parseInt(process.argv[2]) : startIndex;
 	const lines = [];
 	let noOfCelebrations = 0;
 	const start = new Date();
+	console.log('Starting the roster on:', start);
 	for (let i = 0; i < 100; i++) {
 		for (let pi = startIndex; pi < startIndex + people.length; pi++) {
-            // This will make sure that the roster is generated in a round robin fashion.
-            const p = people[pi % people.length];
-            // celebrate only if it is a Friday and it is Meghana's turn.
+			// This will make sure that the roster is generated in a round robin fashion.
+			const p = people[pi % people.length];
+			// celebrate only if it is a Friday and it is Meghana's turn.
 			const celebrate = p === 'Meghana' && start.getDay() === 5 ? ',🥳🥳🥳🥳' : ',';
 			if (celebrate) {
 				noOfCelebrations++;
@@ -47,8 +49,17 @@ const compute = (people, startIndex = 0) => {
 	return lines;
 };
 
-const lines = compute(peopleInOrder);
-writeFile(join('./MDS_PG_Rooster.csv'), lines.join('\n'), {
-	encoding: 'utf-8',
-	flag: 'w'
-});
+if (process.argv[2]) {
+	const startIndexOfRoster = parseInt(process.argv[2]);
+	if (!peopleInOrder[startIndexOfRoster]) {
+		console.error(`Invalid person index: ${process.argv[2]}. Please provide a valid person index.`);
+		console.error('Valid person indexes are:', peopleInOrder.map((p, i) => `${p} - ${i}`).join(', '));
+		process.exit(1);
+	}
+
+	const lines = compute(peopleInOrder, startIndexOfRoster);
+	writeFile(join('./MDS_PG_Rooster.csv'), lines.join('\n'), {
+		encoding: 'utf-8',
+		flag: 'w'
+	});
+}

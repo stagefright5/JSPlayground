@@ -14,6 +14,7 @@
 		"tsparser": "node tsparser.js",
 		"streams": "node streams.js",
 		"asyncawait": "node asyncawait.js",
+		"roster": "node roster-calculator.mjs",
 		"prettify": "prettier --write **/*.js **/*.json **/*.md "
 	},
 	"repository": {
