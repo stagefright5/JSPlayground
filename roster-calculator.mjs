@@ -14,8 +14,8 @@
 
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { daysInAWeek } from './consts.mjs';
 const peopleInOrder = ['Bobby', 'Meghana', 'Suchith'];
-const daysInAWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const formatToddMMyyyy = date => {
 	const d = new Date(date);
