@@ -12,10 +12,19 @@ const DayPresentationType = {
 	6: 'Case Presentation'
 };
 
+/**
+ * 
+const DayPresentationType = {
+	2: 'Seminar',
+	5: 'JC',
+	6: 'Case Presentation'
+};
+ */
+
 const compute = (people, startIndex = 0, startDate = new Date()) => {
 	console.log('Starting the roster from:', people[startIndex]);
 	startIndex = process.argv[2] ? parseInt(process.argv[2]) : startIndex;
-	const lines = [`Date,Student,Day,Presentation Type`];
+	const lines = [`Date,Day,Student,Presentation Type`];
 	console.log('Starting the roster on:', startDate);
 	let pi = startIndex;
 	for (let i = 0; i < 100; i++) {
@@ -24,7 +33,7 @@ const compute = (people, startIndex = 0, startDate = new Date()) => {
 		if (DayPresentationType[day]) {
 			const p = people[pi % people.length];
 			pi++;
-			lines.push(`${formatToddMMyyyy(startDate)},${p},${daysInAWeek[day]},${DayPresentationType[day]}`);
+			lines.push(`${formatToddMMyyyy(startDate)},${daysInAWeek[day]},${p},${DayPresentationType[day]}`);
 		}
 		startDate.setDate(startDate.getDate() + 1);
 	}
@@ -41,7 +50,7 @@ const formatToddMMyyyy = date => {
 
 const startDate = new Date();
 startDate.setMonth(monthsInAYear.indexOf('July'));
-startDate.setDate(2);
+startDate.setDate(1);
 const lines = compute(peopleInOrder, 0, startDate);
 console.log(lines);
 writeFile(join('./MDS_Presentation_Rooster.csv'), lines.join('\n'), {
