@@ -12,14 +12,11 @@ const DayPresentationType = {
 	6: 'Case Presentation'
 };
 
-/**
- * 
-const DayPresentationType = {
-	2: 'Seminar',
-	5: 'JC',
-	6: 'Case Presentation'
-};
- */
+// const DayPresentationType = {
+// 	2: 'Seminar',
+// 	4: 'JC',
+// 	6: 'Case Presentation'
+// };
 
 const compute = (people, startIndex = 0, startDate = new Date()) => {
 	console.log('Starting the roster from:', people[startIndex]);
@@ -53,6 +50,7 @@ startDate.setMonth(monthsInAYear.indexOf('July'));
 startDate.setDate(1);
 const lines = compute(peopleInOrder, 0, startDate);
 console.log(lines);
+// writeFile(join('./MDS_Presentation_Rooster.v2.csv'), lines.join('\n'), {
 writeFile(join('./MDS_Presentation_Rooster.csv'), lines.join('\n'), {
 	encoding: 'utf-8',
 	flag: 'w'
